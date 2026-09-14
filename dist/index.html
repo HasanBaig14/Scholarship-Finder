@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ScholarSprint ranks college scholarships around your profile and keeps every deadline moving." />
+  <title>ScholarSprint — Scholarship Match & Application Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23101716'/%3E%3Cpath d='M12 27 32 16l20 11-20 11z' fill='%23d9ff5b'/%3E%3Cpath d='M20 33v9c7 6 17 6 24 0v-9' fill='none' stroke='%23f7f5ed' stroke-width='4'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="ScholarSprint home"><span class="brand-mark">S</span><span>ScholarSprint</span></a>
+    <div class="sync-state"><span></span> Match engine ready</div>
+    <nav>
+      <button class="nav-link active" data-view="discover">Discover</button>
+      <button class="nav-link" data-view="tracker">Tracker <b id="saved-count">0</b></button>
+    </nav>
+    <button class="profile-chip" id="edit-profile"><span>HB</span><em>Edit profile</em></button>
+  </header>
+
+  <main>
+    <section id="discover-view" class="view active">
+      <div class="intro-grid">
+        <div>
+          <p class="eyebrow">Your opportunity desk · Fall 2026</p>
+          <h1>Find the money.<br><i>Make the deadline.</i></h1>
+          <p class="lede">Scholarships ranked around you, with clear reasons and an application plan—not another endless directory.</p>
+        </div>
+        <div class="impact-card">
+          <div class="impact-top"><span>Potential funding</span><span class="live-pill">LIVE MODEL</span></div>
+          <strong id="potential-total">$62,500</strong>
+          <div class="impact-bar"><i></i></div>
+          <div class="impact-meta"><span>8 strong matches</span><span>3 due soon</span></div>
+        </div>
+      </div>
+
+      <div class="filter-rail" aria-label="Scholarship filters">
+        <div class="search-wrap">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m21 21-4.3-4.3m2.3-5.2A7.5 7.5 0 1 1 4 11.5a7.5 7.5 0 0 1 15 0Z"/></svg>
+          <input id="search" type="search" placeholder="Search award, field, or sponsor" aria-label="Search scholarships" />
+          <kbd>⌘ K</kbd>
+        </div>
+        <select id="amount-filter" aria-label="Filter by award amount"><option value="0">Any award</option><option value="5000">$5k+</option><option value="10000">$10k+</option></select>
+        <select id="deadline-filter" aria-label="Filter by deadline"><option value="365">Any deadline</option><option value="30">Next 30 days</option><option value="60">Next 60 days</option></select>
+        <button class="filter-button" id="best-match">✦ Best matches</button>
+      </div>
+
+      <div class="content-grid">
+        <aside class="profile-panel">
+          <div class="panel-heading"><span>Your signal</span><button id="profile-pencil" aria-label="Edit profile">↗</button></div>
+          <div class="score-ring" style="--score:82"><div><strong>82%</strong><span>complete</span></div></div>
+          <dl>
+            <div><dt>Field</dt><dd id="profile-major">Computer Science</dd></div>
+            <div><dt>GPA</dt><dd id="profile-gpa">3.8</dd></div>
+            <div><dt>State</dt><dd id="profile-state">Michigan</dd></div>
+            <div><dt>Year</dt><dd id="profile-year">Undergraduate</dd></div>
+          </dl>
+          <button class="outline-button" id="strengthen-profile">Strengthen profile <span>+14 matches</span></button>
+          <div class="tip"><span>01</span><p>Add volunteer work to unlock community awards.</p></div>
+        </aside>
+
+        <section class="results-panel">
+          <div class="results-head">
+            <div><h2>Top matches</h2><p><span id="result-count">8</span> opportunities · ranked for your profile</p></div>
+            <button class="text-button" id="export-results">Export CSV ↓</button>
+          </div>
+          <div id="scholarship-list" class="scholarship-list"></div>
+          <div id="empty-state" class="empty-state" hidden><strong>No exact matches.</strong><p>Try a broader search or reset your filters.</p><button id="reset-filters">Reset filters</button></div>
+        </section>
+
+        <aside class="deadline-panel">
+          <div class="panel-heading"><span>Deadline radar</span><span class="radar-dot"></span></div>
+          <div class="radar">
+            <div class="radar-circle r1"></div><div class="radar-circle r2"></div><div class="radar-sweep"></div>
+            <button class="radar-blip b1" data-target="women-tech" aria-label="Women in Technology Scholarship"></button>
+            <button class="radar-blip b2" data-target="future-builders" aria-label="Future Builders Grant"></button>
+            <button class="radar-blip b3" data-target="green-code" aria-label="Green Code Fellowship"></button>
+            <span class="radar-center"></span>
+          </div>
+          <div class="deadline-list" id="deadline-list"></div>
+          <button class="calendar-button" id="calendar-export">Add deadlines to calendar</button>
+        </aside>
+      </div>
+    </section>
+
+    <section id="tracker-view" class="view tracker-view">
+      <div class="tracker-head"><div><p class="eyebrow">Application command center</p><h1>Your funding pipeline.</h1></div><button class="primary-button" data-view="discover">+ Add scholarship</button></div>
+      <div class="tracker-stats"><article><span>Saved</span><strong id="stat-saved">0</strong></article><article><span>In progress</span><strong id="stat-progress">0</strong></article><article><span>Potential value</span><strong id="stat-value">$0</strong></article><article><span>Next deadline</span><strong id="stat-next">—</strong></article></div>
+      <div class="kanban" id="kanban"></div>
+    </section>
+  </main>
+
+  <dialog id="profile-dialog">
+    <form method="dialog" id="profile-form">
+      <div class="modal-head"><div><p class="eyebrow">Matching profile</p><h2>Fine-tune your signal</h2></div><button value="cancel" class="icon-button" aria-label="Close">×</button></div>
+      <label>Field of study<input name="major" value="Computer Science" required /></label>
+      <div class="form-row"><label>GPA<input name="gpa" type="number" min="0" max="4" step="0.1" value="3.8" required /></label><label>Home state<select name="state"><option>Michigan</option><option>Ohio</option><option>California</option><option>New York</option><option>Texas</option></select></label></div>
+      <label>Education level<select name="year"><option>Undergraduate</option><option>High School Senior</option><option>Graduate</option></select></label>
+      <label class="checkbox-label"><input name="firstGen" type="checkbox" checked /><span>First-generation college student</span></label>
+      <button class="primary-button" value="save">Recalculate my matches</button>
+    </form>
+  </dialog>
+
+  <dialog id="detail-dialog"><div id="detail-content"></div></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
